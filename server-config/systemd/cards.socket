@@ -1,0 +1,9 @@
+[Unit]
+Description=gunicorn socket for cards
+
+[Socket]
+ListenStream=/home/sandbox/cards/cards.sock
+User=www-data
+
+[Install]
+WantedBy=sockets.target

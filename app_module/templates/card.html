@@ -1,0 +1,11 @@
+{% extends 'frame.html' %}
+{% block main %}
+<h1 class='title' id='greeting'>Hello {{ current_user.name }},  Merry Christmas!</h1>
+{% include 'tree.html' %}
+<p class='message'>{{current_user.message}}</h2>
+<br />
+<p class='sign'>{{current_user.signature}}</h3>
+<script type='text/javascript'>
+document.getElementById('greeting').scrollIntoView(true);
+</script>
+{% endblock %}

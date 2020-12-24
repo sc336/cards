@@ -1,0 +1,67 @@
+<html>
+<head>
+    <title>Merry Christmas!</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Codystar">
+    <style type="text/css">
+        @font-face {
+          font-family: chopin;
+          src: url("{{ url_for('static', filename='ChopinScript.ttf') }}");
+        }
+        body {
+        	color: #fff;
+            background-color: #e44;
+            }
+        a {
+            color: #0c0;
+            }
+        .title {
+            padding-top: 2px;
+            font-weight: bold;
+            text-align: center;
+            font: 5em "Codystar", sans-serif;
+            }
+        .message {
+            font-weight: normal;
+            text-align: center;
+            font-family: chopin;
+            font-size: 2.5em;
+            }
+        .sign {
+            font-size: 1.5em;
+            text-align:right;
+            font-weight: normal;
+            font-family: chopin;
+            }
+    </style>
+</head>
+<body>
+    <div class="header">
+    </div>
+
+    <div class="navbar">
+    <!-- Did you know: url_for() in templates actually selects by the *python function name* -->
+        <a href="{{ url_for('index') }}">Home</a>
+        {% if current_user.is_authenticated %}
+        <a href="{{ url_for('logout') }}">Logout</a>
+        {% else %}
+        <a href="{{ url_for('login') }}">Login</a>
+        {% endif %}
+    </div>
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="flash-messages">
+        <ul>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    {% endwith %}
+        
+    <div class="main-panel">
+        {% block main %}{% endblock %}
+    </div>
+</body>
+</html>

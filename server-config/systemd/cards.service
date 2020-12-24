@@ -1,0 +1,19 @@
+[Unit]
+Description=Gunicorn instance for cards
+Requires=cards.socket
+After=network.target
+
+[Service]
+Type=notify
+User=sandbox
+Group=www-data
+WorkingDirectory=/home/sandbox/cards
+Environment="PATH=/home/sandbox/cards/venv/bin"
+ExecStart=/home/sandbox/cards/venv/bin/gunicorn runapp:app #bind unix:cards.sock -m 007 
+ExecReload=/bin/kill -s HUP $MAINPID
+KillMode=mixed
+TimeoutStopSec=5
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
