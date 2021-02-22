@@ -22,12 +22,10 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         doc_user = db['users'].find_one({'username':form.username.data})
-        user = User(username = doc_user['username'])
         if doc_user is None or not user.check_password(form.password.data):
-            if user is None:
-                flash('User not found')
             flash('Invalid username or password')
             return redirect(url_for('login'))
+        user = User(username = doc_user['username'])
         login_user(user, remember=form.remember_me.data)
 
         next_page = request.args.get('next')
