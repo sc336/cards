@@ -18,6 +18,12 @@ def login():
     if current_user.is_authenticated:
         print(f'current user {current_user.name}')
         return redirect(url_for('index', _anchor='greeting'))
+    elif 'link_string' in request.args.to_dict():
+        possible_user = db.users.find_one({'link_string':request.args.to_dict()['link_string']})
+        if not possible_user is None:
+            login_user(User(username=possible_user['username']))
+            next_page = url_for('index', _anchor='greeting')
+            return redirect(next_page)
 
     form = LoginForm()
     if form.validate_on_submit():
