@@ -22,19 +22,21 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         doc_user = db['users'].find_one({'username':form.username.data})
-        user = User(username = doc_user['username'])
-        if doc_user is None or not user.check_password(form.password.data):
-            if user is None:
-                flash('User not found')
-            flash('Invalid username or password')
+        if doc_user is not None:
+            user = User(username = doc_user['username'])
+            if not user.check_password(form.password.data):
+                flash('Invalid username or password')
+                return redirect(url_for('login'))
+            login_user(user, remember=form.remember_me.data)
+            next_page = request.args.get('next')
+            if not next_page or url_parse(next_page).netloc != '':
+                #The netloc != '' protects against malicious cross-site redirection
+                next_page = url_for('index', _anchor='greeting')
+            return redirect(next_page)
+        else:
+            flash('User not found')
             return redirect(url_for('login'))
-        login_user(user, remember=form.remember_me.data)
 
-        next_page = request.args.get('next')
-        if not next_page or url_parse(next_page).netloc != '':
-            #The netloc != '' protects against malicious cross-site redirection
-            next_page = url_for('index', _anchor='greeting')
-        return redirect(next_page)
     return render_template('login.html', title='Sign in', form=form)
 
 @app.route('/logout')
