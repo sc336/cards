@@ -37,6 +37,10 @@ class User(UserMixin):
     def message(self):
         return db.users.find_one({'username':self.username})['message']
     @property
+    def link_code(self):
+        return db.users.find_one({'username':self.username})['link_code']
+
+    @property
     def signature(self):
         try:
             return db.users.find_one({'username':self.username})['signature']
@@ -46,13 +50,13 @@ class User(UserMixin):
     def set_password(self, password):
         password_hash = generate_password_hash(SALT+password)
         db.users.update({'username':self.username}, {'$set': {'password_hash': password_hash}})
-    
+
     @staticmethod
     def generate_password(numwords=3):
         wordlist = xp.generate_wordlist(min_length=4, max_length=8)
         passlist = xp.first_upper_case(xp.generate_xkcdpassword(wordlist,numwords=numwords, delimiter=" ").split(" "))
         return ''.join(passlist)
-            
+
     def check_password(self, password):
         return check_password_hash(self.password_hash, SALT+password)
 
