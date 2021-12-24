@@ -35,7 +35,12 @@ class User(UserMixin):
         return db.users.find_one({'username':self.username})['name']
     @property
     def message(self):
-        return db.users.find_one({'username':self.username})['message']
+        user = db.users.find_one({'username':self.username})
+        if 'message' in user:
+            rval = user['message']
+        else:
+            rval = 'And a happy new year!'
+        return rval
     @property
     def link_code(self):
         return db.users.find_one({'username':self.username})['link_code']
